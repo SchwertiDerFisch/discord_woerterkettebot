@@ -11,13 +11,16 @@ End product should be able to do:
 Right now working:
 1)  Basic comparison of First / Last letter.
 2)  Comparison of already used words and new input.
-3)  basic error handling
+3)  error handling
 4)  commands
+5)  scan for chinese letters
+6)  scan for sentences
 
 Next steps:
-1)  better error handling
-2)  output of errors, wrong input, etc.
-3)  improvement of already written code
+1)  performance
+2)  permissions (right now the bot is an admin --not good)
+3)  output of errors, wrong input, etc.
+4)  improvement of already written code
 
 Used tools and setup:
 1)  Visual Studio Code
