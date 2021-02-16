@@ -1,11 +1,9 @@
 package schwerti.commands;
 
-import java.util.List;
-
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
 import schwerti.woerterkettebot.class_exeptionhandling;
 import schwerti.woerterkettebot.class_main_woerterkettebot;
 
@@ -20,34 +18,62 @@ public class command_clear extends ListenerAdapter
 {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event)
     {
-        String[] args = event.getMessage().getContentRaw().split("\\s+");
-        if(args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "clear"))
+        try
         {
-            if(args.length < 2)
+            if(class_event_handler.scan_command(event, event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete()))
             {
-                //error Message --> Not finished yet 
-            }
-            else
-            {
-                List<Message> messages = event.getChannel().getHistory().retrievePast(Integer.parseInt(args[1])).complete();
-                try
+                Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
+                String[] args = message.getContentRaw().split("\\s+");
+                if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "clear")))
                 {
-                    //---->output in bot channel maybe???
-                    //have to fix that the clear message itself is counted with the clear amount
-
-                    System.out.println(messages + " have / has been deleted");
-                    event.getChannel().deleteMessages(messages).queue();
-                }
-                //exeptionhandling, superimposition of exeption_handling function
-                catch(Exception e)
-                {
-                    //console output:
-                        class_exeptionhandling.exeption_handling(e);
-
-                    //embed of type unknow
-                        class_exeptionhandling.exeption_unknown_embed(event);   
+                    if(args.length >= 2)
+                    {
+                        clear(event, args[1]);
+                    }
+                    else
+                    {
+                        class_exeptionhandling.exeption_wrong_usage_embed(event);
+                    }
                 }
             }
         }
+        catch(Exception e)
+        {
+            //console output:
+                class_exeptionhandling.exeption_handling(e);
+        }
     }
+    //the currently used clear function
+        private static void clear(GuildMessageReceivedEvent event, String Amount)
+        {
+            try
+            {
+                if(Integer.parseInt(Amount) <= 1)
+                {
+                    Amount = "2";
+                }
+                event.getChannel().deleteMessages(event.getChannel().getHistory().retrievePast(Integer.parseInt(Amount)).complete()).queue();
+            }
+            //exeptionhandling, superimposition of exeption_handling function
+            catch(Exception e)
+            {
+                //console output:
+                    class_exeptionhandling.exeption_handling(e);
+            }
+        }
+    //maybe we need that one at some point
+        private static void clear(Message message)
+        {
+            try
+            {
+            message.delete().complete();
+            }
+            //exeptionhandling, superimposition of exeption_handling function
+            catch(Exception e)
+            {
+                //console output:
+                    class_exeptionhandling.exeption_handling(e);
+            }
+        }
+
 }

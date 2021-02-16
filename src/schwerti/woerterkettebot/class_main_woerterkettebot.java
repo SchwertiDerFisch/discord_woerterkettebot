@@ -1,73 +1,93 @@
 package schwerti.woerterkettebot;
 
-import javax.security.auth.login.LoginException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
-import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import schwerti.commands.command_clear;
 import schwerti.commands.command_help;
 import schwerti.commands.command_info;
 import schwerti.commands.command_rules;
-import schwerti.commands.event_DeleteSecond;
+import schwerti.commands.event_main;
+import schwerti.commands.class_event_handler;
 
-public class class_main_woerterkettebot
-{
-    //Global variables that have to be know by Events, commands
-        public final static String prefix = "!!";
-
-    //functions
-        public static JDABuilder connect()
-        {
-            //maybe i let a file reading methode read the token out of a file
-            //bec writing it here like this.....not the best way
-            final String token = "";    //i deleted it out of here bec of github
+public class class_main_woerterkettebot {
+    // constructor
+    private class_main_woerterkettebot() {
+        try {
+            // init
             final JDABuilder builder;
-            builder = new JDABuilder(AccountType.BOT);  //maybe we have some issues here, -> "the constructor JDABuilder(AccountType) is deprecated"
+            builder = JDABuilder.createDefault(
+                get_token(),
+                GatewayIntent.GUILD_MEMBERS,
+                GatewayIntent.GUILD_MESSAGES,
+                GatewayIntent.DIRECT_MESSAGES,
+                GatewayIntent.GUILD_VOICE_STATES,
+                GatewayIntent.GUILD_EMOJIS
+            );
 
-            //bot general config
-                builder.setToken(token);
-                builder.setActivity(Activity.watching("Wörterkette"));
-                builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
+            // bot general config
+            builder.setActivity(Activity.watching("Wörterkette"));
+            builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
 
-            //handlers:
+            // handlers:
                 builder.addEventListeners(new command_clear());
-                builder.addEventListeners(new event_DeleteSecond());
+                builder.addEventListeners(new event_main());
                 builder.addEventListeners(new command_info());
                 builder.addEventListeners(new command_rules());
                 builder.addEventListeners(new command_help());
+            //builder.addEventListeners(new event_handler());
 
-            try
-            {
-                builder.build();
-            }
-            //exeptionhandling, superimposition of exeption_handling function
-            catch(LoginException e)
-            {
-                class_exeptionhandling.exeption_handling(e);
-            }
-            catch(IllegalStateException e)
-            {
-                class_exeptionhandling.exeption_handling(e);
-            }
-            catch(Exception e)
-            {
-                //console output:
-                class_exeptionhandling.exeption_handling(e);
-
-                //embed of type unknow
-                    //class_exeptionhandling.exeption_unknown_embed(event);
-            }
-
-            return builder;
+            builder.build();
         }
+        // exeptionhandling, superimposition of exeption_handling function
+        catch (Exception e) {
+            // console output:
+            class_exeptionhandling.exeption_handling(e);
+        }
+    }
 
-    //Startpoint
-        public static void main(String[] args)
+    // Global variables that have to be know by Events, commands
+    public final static String prefix = "!!";
+
+    // Startpoint
+    public static void main(String[] args)
+    {
+        new class_main_woerterkettebot();
+    }
+
+    private static String get_token()
+    {
+        System.out.println("get_token");
+        String fileName = "./notes.txt";
+        return readUsingScanner(fileName);
+    }
+    private static String readUsingScanner(String fileName) {
+		Scanner scanner = null;
+        try
         {
-            JDABuilder builder = connect();
+			scanner = new Scanner(Paths.get(fileName), StandardCharsets.UTF_8.name());
+            // we can use Delimiter regex as "\\A", "\\Z" or "\\z"
+			return scanner.useDelimiter("\\A").next();
         }
+        catch (IOException e)
+        {
+            class_exeptionhandling.exeption_handling(e);
+            System.out.println("The token could be loaded!");
+			return null;
+        }
+        finally
+        {
+			if (scanner != null)
+				scanner.close();
+		}
+
+	}
 
 }

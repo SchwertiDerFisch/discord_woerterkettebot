@@ -1,6 +1,7 @@
 package schwerti.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import schwerti.woerterkettebot.class_exeptionhandling;
@@ -17,31 +18,44 @@ public class command_rules extends ListenerAdapter
 {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event)
     {
-        if(!(event.getChannel().getName().equals("woerterkette-bot"))) //everywhere, work on a better way
+        try
         {
-            String[] args = event.getMessage().getContentRaw().split("\\s+");
-            if(args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "rules"))
+            if(class_event_handler.scan_command(event, event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete()))
             {
-                try
+                Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
+                String[] args = message.getContentRaw().split("\\s+");
+                if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "rules")) && (event.getChannel().getName().equals("bot")))
                 {
-                    EmbedBuilder info = new EmbedBuilder();
-                    info.setColor(0xf531d4);
-                    info.setTitle("Regeln");
-                    info.setDescription("These are the UP TO DATE rules of the game.\nDont let the bot get mad!");
-                    info.addField("NoNames", "Get creative! Dont just use names. Ok: Amazon; NOT ok: Alex", false);
-                    info.addField("Morethen3", "You shouldnt use 'words' with less then 3 letters. Come on, 'ähm' is not a word. \nOk: Elf; NOT ok: hmm", false);
-                    event.getChannel().sendMessage(info.build()).queue();
-                }
-                //exeptionhandling, superimposition of exeption_handling function
-                catch(Exception e)
-                {
-                    //console output:
-                        class_exeptionhandling.exeption_handling(e);
-
-                    //embed of type unknow
-                        class_exeptionhandling.exeption_unknown_embed(event); 
+                    output_rules(event);
                 }
             }
+        }
+        catch(Exception e)
+        {
+            //console output:
+                class_exeptionhandling.exeption_handling(e);
+        }
+    }
+    public void output_rules(GuildMessageReceivedEvent event)
+    {
+        try
+        {
+            EmbedBuilder info = new EmbedBuilder();
+            info.setColor(0xf531d4);
+            info.setTitle("Regeln");
+            info.setDescription("These are the UP TO DATE rules of the game.\nDont let the bot get mad!");
+            info.addField("NoNames", "Get creative! Dont just use names. Ok: Amazon; NOT ok: Alex", false);
+            info.addField("Morethen3", "You shouldnt use 'words' with less then 3 letters. Come on, 'ähm' is not a word. \nOk: Elf; NOT ok: hmm", false);
+            event.getChannel().sendMessage(info.build()).queue();
+        }
+        //exeptionhandling, superimposition of exeption_handling function
+        catch(Exception e)
+        {
+            //console output:
+                class_exeptionhandling.exeption_handling(e);
+
+            //embed of type unknow
+                //class_exeptionhandling.exeption_unknown_embed(event); 
         }
     }
 }

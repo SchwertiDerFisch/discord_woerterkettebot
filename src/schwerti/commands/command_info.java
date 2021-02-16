@@ -1,6 +1,7 @@
 package schwerti.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import schwerti.woerterkettebot.class_exeptionhandling;
@@ -17,38 +18,51 @@ Works, but we have some work here. Error Handling is not finished yet.
 
 public class command_info extends ListenerAdapter
 {
+    
     public void onGuildMessageReceived(GuildMessageReceivedEvent event)
     {
-        if(!(event.getChannel().getName().equals("woerterkette-bot"))) //everywhere, work on a better way
+        try
         {
-            String[] args = event.getMessage().getContentRaw().split("\\s+");
-            if(args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "info"))
+            if(class_event_handler.scan_command(event, event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete()))
             {
-    
-                try
+                Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
+                String[] args = message.getContentRaw().split("\\s+");
+                if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "info")) && (event.getChannel().getName().equals("bot")))
                 {
-                    //do some fancy stuff here -------------------work 
-                    EmbedBuilder info = new EmbedBuilder();
-                    info.setColor(0xf531d4);
-                    info.setTitle("Info");
-                    info.setDescription("This bot is a hardcore Wörterkette Nerd and will manage this server!");
-                    info.addField("Creator", "Schwerti", false);
-                    info.addField("On behalf of", "Zero, Yukio", false);
-                    event.getChannel().sendMessage(info.build()).queue();
+                    output_info(event);
                 }
-                //exeptionhandling, superimposition of exeption_handling function
-                catch(Exception e)
-                {
-                    //console output:
-                        class_exeptionhandling.exeption_handling(e);
-
-                    //embed of type unknow
-                        class_exeptionhandling.exeption_unknown_embed(event);
-                        
-                }
-                
             }
         }
-        
+        catch(Exception e)
+        {
+            //console output:
+                class_exeptionhandling.exeption_handling(e);
+        }
     }
+
+    public void output_info(GuildMessageReceivedEvent event)
+    {
+        try
+        {
+            //do some fancy stuff here -------------------work 
+            EmbedBuilder info = new EmbedBuilder();
+            info.setColor(0xf531d4);
+            info.setTitle("Info");
+            info.setDescription("This bot is a hardcore Wörterkette Nerd and will manage this server!");
+            info.addField("Creator", "Schwerti", false);
+            info.addField("On behalf of", "Zero, Yukio", false);
+            event.getChannel().sendMessage(info.build()).queue();
+        }
+        //exeptionhandling, superimposition of exeption_handling function
+        catch(Exception e)
+        {
+            //console output:
+                class_exeptionhandling.exeption_handling(e);
+
+            //embed of type unknow
+                //class_exeptionhandling.exeption_unknown_embed(event);
+                
+        }      
+    }
+  
 }
