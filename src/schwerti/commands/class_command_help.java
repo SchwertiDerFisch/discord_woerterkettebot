@@ -1,11 +1,9 @@
 package schwerti.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import schwerti.woerterkettebot.class_exeptionhandling;
-import schwerti.woerterkettebot.class_main_woerterkettebot;
+
 
 /*
 This handler should give an overview of commands available.
@@ -14,30 +12,9 @@ Exeption handling has to be fixed soon.
 
 ----> thinking about: Dont like the hardcoded way of the channel the bot should be able to use
 */
-public class command_help extends ListenerAdapter
-{
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event)
-    {
-        try
-        {
-            if(class_event_handler.scan_command(event, event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete()))
-            {
-                Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
-                String[] args = message.getContentRaw().split("\\s+");
-                if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "help")) && (event.getChannel().getName().equals("bot")))
-                {
-                    output_help(event);
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            //console output:
-                class_exeptionhandling.exeption_handling(e);
-        }
-    }
-    
-    public void output_help(GuildMessageReceivedEvent event)
+public class class_command_help
+{   
+    public static void output_help(GuildMessageReceivedEvent event)
     {
         try
         {

@@ -16,31 +16,9 @@ todo (like other events):
 Works, but we have some work here. Error Handling is not finished yet.
 */
 
-public class command_info extends ListenerAdapter
+public class class_command_info
 {
-    
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event)
-    {
-        try
-        {
-            if(class_event_handler.scan_command(event, event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete()))
-            {
-                Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
-                String[] args = message.getContentRaw().split("\\s+");
-                if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "info")) && (event.getChannel().getName().equals("bot")))
-                {
-                    output_info(event);
-                }
-            }
-        }
-        catch(Exception e)
-        {
-            //console output:
-                class_exeptionhandling.exeption_handling(e);
-        }
-    }
-
-    public void output_info(GuildMessageReceivedEvent event)
+    static public void output_info(GuildMessageReceivedEvent event)
     {
         try
         {

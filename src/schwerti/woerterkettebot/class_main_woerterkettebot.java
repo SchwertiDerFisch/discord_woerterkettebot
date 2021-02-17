@@ -10,13 +10,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import schwerti.commands.command_clear;
-import schwerti.commands.command_help;
-import schwerti.commands.command_info;
-import schwerti.commands.command_rules;
-import schwerti.commands.event_main;
-import schwerti.commands.class_event_handler;
-
 public class class_main_woerterkettebot {
     // constructor
     private class_main_woerterkettebot() {
@@ -37,17 +30,18 @@ public class class_main_woerterkettebot {
             builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
 
             // handlers:
-                builder.addEventListeners(new command_clear());
-                builder.addEventListeners(new event_main());
-                builder.addEventListeners(new command_info());
-                builder.addEventListeners(new command_rules());
-                builder.addEventListeners(new command_help());
-            //builder.addEventListeners(new event_handler());
+                //builder.addEventListeners(new command_clear());
+                //builder.addEventListeners(new event_main());
+                //builder.addEventListeners(new command_info());
+                //builder.addEventListeners(new command_rules());
+                //builder.addEventListeners(new command_help());
+                builder.addEventListeners(new event_handler());
 
             builder.build();
         }
         // exeptionhandling, superimposition of exeption_handling function
-        catch (Exception e) {
+        catch (Exception e)
+        {
             // console output:
             class_exeptionhandling.exeption_handling(e);
         }
@@ -61,6 +55,7 @@ public class class_main_woerterkettebot {
     {
         new class_main_woerterkettebot();
     }
+
 
     private static String get_token()
     {
