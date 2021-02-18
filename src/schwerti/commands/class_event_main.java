@@ -1,14 +1,12 @@
 package schwerti.commands;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import schwerti.woerterkettebot.class_exeptionhandling;
-import schwerti.woerterkettebot.event_handler;
+
 
 /*
 This is the heart of the bot.

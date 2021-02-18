@@ -1,11 +1,9 @@
 package schwerti.commands;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import schwerti.woerterkettebot.class_exeptionhandling;
-import schwerti.woerterkettebot.class_main_woerterkettebot;
+
 
 
 /*

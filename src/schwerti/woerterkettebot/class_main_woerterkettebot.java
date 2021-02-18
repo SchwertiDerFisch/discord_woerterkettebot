@@ -1,6 +1,5 @@
 package schwerti.woerterkettebot;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
@@ -10,10 +9,12 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-public class class_main_woerterkettebot {
+public class class_main_woerterkettebot
+{
     // constructor
     private class_main_woerterkettebot() {
-        try {
+        try
+        {
             // init
             final JDABuilder builder;
             builder = JDABuilder.createDefault(
@@ -55,7 +56,6 @@ public class class_main_woerterkettebot {
     {
         new class_main_woerterkettebot();
     }
-
 
     private static String get_token()
     {

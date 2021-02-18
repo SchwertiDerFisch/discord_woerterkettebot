@@ -1,11 +1,9 @@
 package schwerti.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
 import schwerti.woerterkettebot.class_exeptionhandling;
-import schwerti.woerterkettebot.class_main_woerterkettebot;
 
 /*
 function to get information about the bot.
@@ -36,10 +34,6 @@ public class class_command_info
         {
             //console output:
                 class_exeptionhandling.exeption_handling(e);
-
-            //embed of type unknow
-                //class_exeptionhandling.exeption_unknown_embed(event);
-                
         }      
     }
   
