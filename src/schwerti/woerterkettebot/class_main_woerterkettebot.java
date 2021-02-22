@@ -3,20 +3,37 @@ package schwerti.woerterkettebot;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 public class class_main_woerterkettebot
 {
+    private JDA jda;
+    public static TextChannel bot;
+    public static TextChannel woerterkettebot;
+    
+    static public class words
+    {
+        public static String word1; // main event
+        public static String word2;// main event
+        public static List<Message> history;
+    };
     // constructor
-    private class_main_woerterkettebot() {
+    private class_main_woerterkettebot()
+    {
+
         try
         {
             // init
             final JDABuilder builder;
+            
             builder = JDABuilder.createDefault(
                 get_token(),
                 GatewayIntent.GUILD_MEMBERS,
@@ -37,8 +54,9 @@ public class class_main_woerterkettebot
                 //builder.addEventListeners(new command_rules());
                 //builder.addEventListeners(new command_help());
                 builder.addEventListeners(new event_handler());
-
-            builder.build();
+                
+            jda = builder.build();
+            jda.awaitReady();
         }
         // exeptionhandling, superimposition of exeption_handling function
         catch (Exception e)
@@ -55,6 +73,11 @@ public class class_main_woerterkettebot
     public static void main(String[] args)
     {
         new class_main_woerterkettebot();
+    }
+
+    public JDA get_jda()
+    {
+        return jda;
     }
 
     private static String get_token()

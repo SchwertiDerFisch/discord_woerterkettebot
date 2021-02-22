@@ -3,12 +3,12 @@ package schwerti.woerterkettebot;
 import java.util.List;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import schwerti.commands.class_command_clear;
-import schwerti.commands.class_command_help;
-import schwerti.commands.class_command_info;
-import schwerti.commands.class_command_rules;
+
+import schwerti.commands.class_commands;
 import schwerti.commands.class_event_main;
 
 public class event_handler extends ListenerAdapter
@@ -25,18 +25,16 @@ public class event_handler extends ListenerAdapter
                 event.getMessage().delete().queue();
                 return;
             }
-            List <Message> history = event.getChannel().getHistory().retrievePast(100).complete();
 
-            if(event_handler.scan_command(event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete()))
+            if(class_commands.scan_command(event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete()))
             {
-                Message message = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete();
-                String[] args = message.getContentRaw().split("\\s+");
-
-                check_command(event, args);
+                String[] args = event.getChannel().retrieveMessageById(event.getMessageIdLong()).complete().getContentRaw().split("\\s+");
+                class_commands.check_command(event, args);
             }
             else
             {
-                class_event_main.main_event(event, history);
+                class_main_woerterkettebot.words.history.add(0, event.getMessage());
+                class_event_main.main_event(event);
             }
         }
         catch(Exception e)
@@ -45,67 +43,16 @@ public class event_handler extends ListenerAdapter
                 class_exeptionhandling.exeption_handling(e);   
         }
     }
-
-    public static boolean scan_command(Message message)
+    public void onReady(ReadyEvent event)
     {
-        String[] args = message.getContentRaw().split("\\s+");
-        if(args[0].substring(0,2).equals(class_main_woerterkettebot.prefix))
-        {
-            System.out.println("Command event!");
-            return true;
-        }
-        return false;
-    }
+        
+        System.out.println("Jda is now ready! Bot is alive!");
+        class_main_woerterkettebot.bot = event.getJDA().getGuilds().get(0).getTextChannelsByName("bot", false).get(0);
+        class_main_woerterkettebot.woerterkettebot = event.getJDA().getGuilds().get(0).getTextChannelsByName("woerterkette-bot", false).get(0);
+        //class_main_woerterkettebot.bot.sendMessage("I am A L I V E !! This is the bot Channel.").queue();
+        //class_main_woerterkettebot.bot.sendMessage("I am A L I V E !! This is the woerterkette-bot Channel.").queue();
+        class_main_woerterkettebot.words.history = class_main_woerterkettebot.woerterkettebot.getHistory().retrievePast(100).complete();
 
-    public static boolean check_command(GuildMessageReceivedEvent event, String[] args)
-    {
-        if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "clear")))
-        {
-            class_command_clear.clear(event, args[1]);
-        }
-        else if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "info")))
-        {
-            if(!event.getChannel().getName().equals("bot"))
-            {
-                event.getMessage().delete().queue();
-                return false;
-            }
-            else
-            {
-                class_command_info.output_info(event);
-                return true;
-            }
-            
-        }
-        else if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "rules")))
-        {
-            if(!event.getChannel().getName().equals("bot"))
-            {
-                event.getMessage().delete().queue();
-                return false;
-            }
-            else
-            {
-                class_command_rules.output_rules(event);
-                return true;
-            }
-            
-        }
-        else if((args[0].equalsIgnoreCase(class_main_woerterkettebot.prefix + "help")))
-        {
-            if(!event.getChannel().getName().equals("bot"))
-            {
-                event.getMessage().delete().queue();
-                return false;
-            }
-            else
-            {
-                class_command_help.output_help(event);
-                return true;
-            }
-            
-        }
-        return false;
     }
 }
     

@@ -1,11 +1,10 @@
 package schwerti.commands;
 
-import java.util.List;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import schwerti.woerterkettebot.class_exeptionhandling;
+import schwerti.woerterkettebot.class_main_woerterkettebot;
 
 
 /*
@@ -23,16 +22,18 @@ public class class_event_main
     /*
     checking all the conditions
     */
-    public static boolean main_event (GuildMessageReceivedEvent event, List <Message> history)
+    public static boolean main_event (GuildMessageReceivedEvent event)
     {
+
         //get past 100 messages -> more is kinda buggy?
         try
         {
             //upper case bec people can not write ---> maybe we have to change that one
                 //Message m_word1 = history.get(0);
                 //Message m_word2 = history.get(1);
-                String word1 = history.get(0).getContentRaw().toUpperCase();
-                String word2 = history.get(1).getContentRaw().toUpperCase();
+                
+                class_main_woerterkettebot.words.word1 = class_main_woerterkettebot.words.history.get(0).getContentRaw().toUpperCase();
+                class_main_woerterkettebot.words.word2 = class_main_woerterkettebot.words.history.get(1).getContentRaw().toUpperCase();
                 /*                         
                 int i = 0;
                 int a = 1;
@@ -55,8 +56,9 @@ public class class_event_main
                 
             //checks for sentences, wrong first letter, characters that i can not read and if the word has already been used in last 100
             // || !(check_sentence(event))
-                if(!(check_character_ideologic(event)) || !(check_first_last(event, word1, word2)) || !(check_repeat(event, history, word1, word2)))
+                if(!(check_character_ideologic()) || !(check_first_last()) || !(check_repeat()))
                 {
+                    class_main_woerterkettebot.words.history.remove(0);
                     return true;
                 }     
         }
@@ -75,7 +77,7 @@ public class class_event_main
     }
 
     //The embed builder gets called so many times, that a function is worth i think.
-        private static void error_embed(GuildMessageReceivedEvent event, String description)
+        private static void error_embed(String description)
         {
             //conf
                 EmbedBuilder error = new EmbedBuilder();
@@ -83,24 +85,18 @@ public class class_event_main
                 error.setTitle("Error");
                 error.setDescription(description);
             //send
-                event.getGuild().getTextChannelsByName("bot",true).get(0).sendMessage(error.build()).queue();
+                class_main_woerterkettebot.bot.sendMessage(error.build()).queue();
         }
 
     //chinese characFalschter and stuff that i can not read
-        private static boolean check_character_ideologic(GuildMessageReceivedEvent event)
+        private static boolean check_character_ideologic()
         {
-            //for(int c_count = 0; c_count < event.getMessage().getContentDisplay().length(); c_count = c_count + 1)
-            //{
-                /* 
-                if (Character.isIdeographic(event.getMessage().getContentDisplay().charAt(c_count)))
-                {
-                    
-                } 
-                */
                 //^[öÖäÄüÜßa-zA-Z]*$        [a-zA-Z]+
-                if(!event.getMessage().getContentDisplay().matches("^[öÖäÄüÜßa-zA-Z]*$"))
+                if(!(class_main_woerterkettebot.words.history.get(0).getContentRaw().matches("^[öÖäÄüÜßa-zA-Z]*$")))
                 {
-                    event.getMessage().delete().queue();
+                    //console output
+                        System.out.println("Symbol Error");
+                    class_main_woerterkettebot.words.history.get(0).delete().queue();
                     return false;
                 }
             //} 
@@ -122,18 +118,19 @@ public class class_event_main
         */
 
     //check if the word has already been used in the last 100
-        private static boolean check_repeat(GuildMessageReceivedEvent event ,List<Message> history, String word1, String word2)
+        private static boolean check_repeat()
         {
             
-            for (Message message : history.subList(1, history.size())) //skipping the message itself here with subList
+            for (Message message : class_main_woerterkettebot.words.history.subList(1, class_main_woerterkettebot.words.history.size())) //skipping the message itself here with subList
             {
-                if(message.getContentRaw().toUpperCase().equals(word1))
+                if(message.getContentRaw().toUpperCase().equals(class_main_woerterkettebot.words.word1))
                 {
-                    System.out.println("Word has already been used in the last 100");
+                    //console output
+                        System.out.println("Word 100");
                     //Embed
-                        error_embed(event, "This word has already been used");
+                        error_embed("This word has already been used");
                     //delete message
-                        history.get(0).delete().queue();
+                        class_main_woerterkettebot.words.history.get(0).delete().queue();
                     return false;
                 }
             }
@@ -141,15 +138,15 @@ public class class_event_main
         }
         
     //firstletter of new message == last letter of last message
-        private static boolean check_first_last(GuildMessageReceivedEvent event, String word1, String word2)
+        private static boolean check_first_last()
         {
             //get last and first letter:
-                if(word1.charAt(0) != word2.charAt(word2.length() - 1))
+                if(class_main_woerterkettebot.words.word1.charAt(0) != class_main_woerterkettebot.words.word2.charAt(class_main_woerterkettebot.words.word2.length() - 1))
                 {
                     //console output
-                    System.out.println("First_Last_Letter false");
+                        System.out.println("First_Last_Letter false");
                     //delete message
-                        event.getMessage().delete().queue();  
+                        class_main_woerterkettebot.words.history.get(0).delete().queue();  
                     return false;
                 }
             return true;
