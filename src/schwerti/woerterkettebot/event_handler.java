@@ -52,7 +52,6 @@ public class event_handler extends ListenerAdapter
         //class_main_woerterkettebot.bot.sendMessage("I am A L I V E !! This is the bot Channel.").queue();
         //class_main_woerterkettebot.bot.sendMessage("I am A L I V E !! This is the woerterkette-bot Channel.").queue();
         class_main_woerterkettebot.words.history = class_main_woerterkettebot.woerterkettebot.getHistory().retrievePast(100).complete();
-
     }
 }
     

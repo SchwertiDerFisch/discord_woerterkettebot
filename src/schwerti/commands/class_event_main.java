@@ -71,6 +71,7 @@ public class class_event_main
                 class_exeptionhandling.exeption_handling(e);
             //del messages
                 event.getMessage().delete().queue();
+                class_main_woerterkettebot.words.history.remove(0);
         }
             
         return false;

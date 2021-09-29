@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/home/schwerti/Markus/Schwertis/Markus/Work/Schwerti/Bots/woerterkettebot/build_alpha/woerterkettebot/**/*.jar"
+    ]
+}
